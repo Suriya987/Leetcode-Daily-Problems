@@ -1,0 +1,25 @@
+1662. Check If Two String Arrays are Equivalent
+
+Time comlexity
+  O(N)
+ Space Complexity
+  O(1)
+
+class Solution {
+public:
+    bool arrayStringsAreEqual(vector<string>& word1, vector<string>& word2) {
+        string check1,check2;
+        int len1=word1.size(),len2=word2.size();
+        for(int i=0;i<len1;i++)
+        {
+          check1+=word1[i];
+        }
+        for(int i=0;i<len2;i++)
+        {
+          check2+=word2[i];
+        }
+        if(check1==check2)
+          return true;
+        return false;
+    }
+};
