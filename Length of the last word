@@ -1,0 +1,54 @@
+Source : Leetcode
+
+Given a string s consisting of words and spaces, return the length of the last word in the string.
+
+A word is a maximal 
+substring
+ consisting of non-space characters only.
+
+
+Example 1:
+
+Input: s = "Hello World"
+Output: 5
+Explanation: The last word is "World" with length 5.
+Example 2:
+
+Input: s = "   fly me   to   the moon  "
+Output: 4
+Explanation: The last word is "moon" with length 4.
+
+Time Complexity :
+   O(N)
+Space Complexity : O(1)
+
+soln:
+
+class Solution {
+public:
+    int lengthOfLastWord(string s) {
+
+         // i need to look for a letter which is the initial of word
+         // count it till the space meets if the space meets keep check point and again the  
+         // any letter is start after space is met recount it from zero follow till reaches null
+
+        int len = s.size();
+        int space=0,wordCount=0;
+        for(int i=0;i<len;i++)
+        {
+            if(s[i]==' ')
+            {
+                     space=1;
+            }
+            else if(s[i]!=' ')
+            {
+            if(space==1)
+               wordCount=0;
+    
+                wordCount++;
+                space=0;
+            }
+        }   
+        return wordCount;
+    }
+};
