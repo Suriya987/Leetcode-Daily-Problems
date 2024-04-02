@@ -1,0 +1,67 @@
+Source : Leetcode
+
+Given two strings s and t, determine if they are isomorphic.
+
+Two strings s and t are isomorphic if the characters in s can be replaced to get t.
+
+All occurrences of a character must be replaced with another character while preserving the order of characters. 
+No two characters may map to the same character, but a character may map to itself.
+ 
+Example 1:
+
+Input: s = "egg", t = "add"
+Output: true
+Example 2:
+
+Input: s = "foo", t = "bar"
+Output: false
+Example 3:
+
+Input: s = "paper", t = "title"
+Output: true
+
+Input : s= "badc"  t = "kikp"
+output false
+
+
+Time complexity :
+                    O(N)
+Space complexity :
+                    O(N)
+soln:
+
+class Solution {
+public:
+    bool isIsomorphic(string s, string t) {
+         
+         //going to store the both strings in the different map data structure
+         //post that i am going to sort it both the map 
+         // after traversing both the map if the value is not matching or any one map runs out of value
+         //return false or else return true
+
+           unordered_map<char,char> sMp;
+           unordered_map<char,char> tMp;
+
+           int len1=s.size();
+           
+
+        for(int i=0;i<len1;i++)
+        {
+          if(sMp.find(s[i])!=sMp.end())
+          {
+             if(sMp[s[i]]!=t[i])
+             return false;
+          }
+          else
+          {
+            if(tMp.find(t[i])!=tMp.end())
+            return false;
+          }
+                  //adding the string into the map data structure 
+                 sMp[s[i]]=t[i];
+                 tMp[t[i]]=s[i];
+       }
+           return true;          
+
+    }
+};
