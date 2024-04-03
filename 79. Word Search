@@ -1,0 +1,64 @@
+Given an m x n grid of characters board and a string word, return true if word exists in the grid.
+
+The word can be constructed from letters of sequentially adjacent cells, where adjacent cells are horizontally or vertically neighboring. 
+The same letter cell may not be used more than once.
+
+Input: board = [["A","B","C","E"],["S","F","C","S"],["A","D","E","E"]], word = "ABCCED"
+Output: true
+
+Input: board = [["A","B","C","E"],["S","F","C","S"],["A","D","E","E"]], word = "ABCB"
+Output: false
+
+Time complexity :
+      O(N*M*4^ind)
+  N*M -> for finding the starting position 
+  4^ind -> every index we have 4 options at worst case we endedup checking every possible options
+
+Space Complexity :
+     O(ind) -> 
+
+soln:
+
+class Solution {
+
+    bool dfs(vector<vector<char>>& board , string word , int row , int col , int ind , int m , int n)
+      {
+           
+           if(ind==word.size()) return true;
+
+    if(row<0 || row==m || col<0 || col==n || word[ind]!= board[row][col] || board[row][col] == '$')     
+        return false;
+
+              char ch = board[row][col];
+              board[row][col] = '$';
+            
+            bool top    =   dfs(board,word,row-1,col,ind+1,m,n);
+            bool right  =   dfs(board,word,row,col+1,ind+1,m,n);
+            bool left   =   dfs(board,word,row,col-1,ind+1,m,n);
+            bool bottom =   dfs(board,word,row+1,col,ind+1,m,n);
+
+            board[row][col] = ch ;
+
+            return (top || right || left || bottom) ;      
+      }
+public:
+    bool exist(vector<vector<char>>& board, string word) {
+               
+             int m=board.size();
+             int n=board[0].size();
+
+             // i need to find which is my starting index 
+
+             for(int i=0;i<m;i++)
+             {
+                for(int j=0;j<n;j++)
+                {
+                    if(board[i][j] == word[0])
+                      {
+                        if(dfs(board,word,i,j,0,m,n))  return true;
+                      }
+                }
+             }
+             return false;
+    }
+};
