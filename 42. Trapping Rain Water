@@ -1,0 +1,103 @@
+Source : Leetcode
+
+Given n non-negative integers representing an elevation map where the width of each bar is 1, compute how much water it can trap after raining.
+
+Example 1 :
+
+Input: height = [0,1,0,2,1,0,1,3,2,1,2,1]
+Output: 6
+Explanation: The above elevation map (black section) is represented by array [0,1,0,2,1,0,1,3,2,1,2,1]. In this case, 6 units of rain water (blue section) are being trapped.
+
+Example 2 :
+
+Input: height = [4,2,0,3,2,5]
+Output: 9
+
+Soln :
+
+Time Complexity : O(N) + O(N) + O(N)
+    O(3N)    overall,  ~ O(N) 
+Space Complexity : O(N) + O(N)
+  for using two vectors.
+
+Approach :
+
+    result we need  is to calculate how much water can be trapped between the bars based on their heights.
+    Water is trapped only if there are any left or right side max than the curr index that we are standing
+
+     for determining the left and right side we need vectors to hold it for our reference .
+
+
+#Left  This array will holding the maximum height  from the start up to the current index i.
+#Right This array will store the maximum height  from the end up to the current index i.
+
+  
+While you are iterating through the given vector from 1th index , Left vector will check which one is higher ( with the curr index ) this will go till N.
+  why Nth index becoz  0th index is the maimum height from as of now. 
+One more loop for calculating the right vector which holds the maximum height from the end (n-2) 
+    here why n-2 becoz we pick the n-1 index is the maximum as of now .
+
+Atlast , we able to calculatet the trapped water in the result vector .
+
+
+class Solution {
+public:
+    int trap(vector<int>& height) {
+        
+        int n = height.size();
+
+        //base case
+        if (n == 0) return 0;
+        
+        vector<int> left(n);
+        vector<int> right(n);
+        
+        // Filling the  left vector
+        left[0] = height[0];
+        for (int i = 1; i < n; i++) 
+        {
+            left[i] = max(left[i - 1], height[i]);
+        }
+        
+        // Filling the  right vector
+
+        right[n - 1] = height[n - 1];
+        for (int i = n - 2; i >= 0; i--) 
+        {
+            right[i] = max(right[i + 1], height[i]);
+        }
+        
+        // calculating the water which is trapped
+        int trappedWater = 0;
+        for (int i = 0; i < n; i++) 
+        {
+            trappedWater += min(left[i], right[i]) - height[i];
+        }
+        
+        return trappedWater;
+    }
+};
+
+
+//    4  2  0  3  2  5
+
+
+//                               |
+//    |   *    *      *    *     |
+//    |   *    *      |    *     |
+//    |   |    *      |    |     |
+//    |   |    *      |    |     |
+//    0   1    2      3    4     5
+
+   
+//    1 Condition 
+//       height[left] == 0
+//        left == 0   skip the curr index
+
+//     int    left, curr , right  
+
+//     if we are standing in the curr index
+
+//     check any left or right index value is equal to curr index val
+//         if it is  there is no possiblity for storing it .
+
