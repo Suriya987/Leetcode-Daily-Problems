@@ -1,0 +1,196 @@
+Source : Leetcode
+
+Example 1:
+
+Input: n = 4
+Output: 4
+Explanation:
+T_3 = 0 + 1 + 1 = 2
+T_4 = 1 + 1 + 2 = 4
+Example 2:
+
+Input: n = 25
+Output: 1389537
+
+Four approaches :
+
+Problem Explaination:
+The problem involves computing the N-th Tribonacci number, where the Tribonacci sequence is defined as follows:
+
+T(0) = 0
+T(1) = 1
+T(2) = 1
+T(n) = T(n-1) + T(n-2) + T(n-3) for n >= 3
+In other words, each Tribonacci number (starting from the fourth term onwards) is the sum of the previous three Tribonacci numbers.
+
+Methods To Solve This Problem:
+
+Recursive Approach
+Dynamic Programming (Memoization)
+Iterative Approach (Dynamic Programming)
+Space-Optimized Iterative Approach
+
+Recursive Approach🤓:
+
+The recursive approach directly follows the definition of the Tribonacci sequence. We define a recursive function tribonacci(n) that computes T(n) 
+based on the recurrence relation:
+
+T(0) = 0
+T(1) = 1
+T(2) = 1
+T(n) = T(n-1) + T(n-2) + T(n-3) for n >= 3
+
+Detailed Steps:
+
+Base Cases:
+
+If n == 0, return 0.
+If n == 1 or n == 2, return 1.
+
+Recursive Case:
+
+For n >= 3, recursively compute T(n) as T(n-1) + T(n-2) + T(n-3).
+
+Time Complexity: The time complexity of this recursive solution is exponential (O(3^n)), as each call branches into three recursive calls.
+( TLE exceeded )
+
+class Solution {
+public:
+    int tribonacci(int n) {
+        if (n == 0) {
+            return 0;
+        } else if (n == 1 || n == 2) {
+            return 1;
+        } else {
+            return tribonacci(n - 1) + tribonacci(n - 2) + tribonacci(n - 3);
+        }
+    }
+};
+
+Dynamic Programming (Memoization)😎:
+This approach uses dynamic programming with memoization to optimize the recursive solution.
+We define a helper function that recursively computes T(n) and stores already computed values in a dictionary (memo) to avoid redundant calculations.
+
+Detailed Steps:
+
+Use a memo dictionary to store already computed Tribonacci numbers.
+
+Define a recursive helper function that computes T(n):
+
+If n is in memo, return its value.
+
+Base Cases:
+If n == 0, return 0.
+If n == 1 or n == 2, return 1.
+
+Recursive Case:
+
+Compute T(n) recursively as T(n-1) + T(n-2) + T(n-3).
+Store the computed value in memo.
+Return the computed value.
+
+class Solution {
+public:
+    int tribonacci(int n) {
+        std::unordered_map<int, int> memo;
+        return helper(n, memo);
+    }
+    
+private:
+    int helper(int n, std::unordered_map<int, int>& memo) {
+        if (memo.find(n) != memo.end()) {
+            return memo[n];
+        }
+        
+        int result;
+        if (n == 0) {
+            result = 0;
+        } else if (n == 1 || n == 2) {
+            result = 1;
+        } else {
+            result = helper(n - 1, memo) + helper(n - 2, memo) + helper(n - 3, memo);
+        }
+        
+        memo[n] = result;
+        return result;
+    }
+};
+
+Iterative Approach (Dynamic Programming)😎:
+
+This approach uses an iterative dynamic programming technique to compute the Tribonacci numbers from T(0) up to T(n).
+
+Detailed Steps:
+
+Initialize a list dp to store the Tribonacci numbers.
+
+Base Cases:
+If n == 0, return 0.
+If n == 1 or n == 2, return 1.
+
+Fill in the dp list iteratively from dp[3] up to dp[n] using the recurrence relation:
+
+dp[i] = dp[i-1] + dp[i-2] + dp[i-3] for i >= 3.
+Return dp[n], which is the N-th Tribonacci number.
+
+Code👩🏻‍💻:
+
+class Solution {
+public:
+    int tribonacci(int n) {
+        if (n == 0) {
+            return 0;
+        } else if (n == 1 || n == 2) {
+            return 1;
+        }
+        
+        std::vector<int> dp(n + 1);
+        dp[1] = 1;
+        dp[2] = 1;
+        
+        for (int i = 3; i <= n; i++) {
+            dp[i] = dp[i - 1] + dp[i - 2] + dp[i - 3];
+        }
+        
+        return dp[n];
+    }
+};
+
+Space-Optimized Iterative Approach😎:
+
+This approach optimizes the space usage by keeping only the necessary previous Tribonacci numbers in variables (a, b, c)
+instead of storing all previous values in a list.
+
+Detailed Steps:
+
+Use three variables a, b, and c to keep track of the last three Tribonacci numbers (T(n-3), T(n-2), T(n-1)).
+Base Cases:
+If n == 0, return 0.
+If n == 1 or n == 2, return 1.
+Update the variables iteratively from 3 up to n using the recurrence relation:
+next_trib = a + b + c
+Update a, b, c accordingly for the next iteration.
+After the loop, c will contain T(n), which is the N-th Tribonacci number.
+
+class Solution {
+public:
+    int tribonacci(int n) {
+        if (n == 0) {
+            return 0;
+        } else if (n == 1 || n == 2) {
+            return 1;
+        }
+        
+        int a = 0, b = 1, c = 1;
+        int nextTrib;
+        
+        for (int i = 3; i <= n; i++) {
+            nextTrib = a + b + c;
+            a = b;
+            b = c;
+            c = nextTrib;
+        }
+        
+        return c;
+    }
+};
