@@ -18,7 +18,7 @@ Input: nums = [-10,8,6,7,-2,-3]
 Output: -1
 Explanation: There is no a single valid k, we return -1.
 
-Time complexity : o(N*N) 
+Time complexity : o(N LogN) 
 Space Complexity : O(1)
 
 class Solution {
