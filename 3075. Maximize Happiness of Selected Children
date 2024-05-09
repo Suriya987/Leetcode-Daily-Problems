@@ -1,0 +1,101 @@
+You are given an array happiness of length n, and a positive integer k.
+
+There are n children standing in a queue, where the ith child has happiness value happiness[i]. You want to select k children from these n children in k turns.
+
+In each turn, when you select a child, the happiness value of all the children that have not been selected till now decreases by 1. 
+Note that the happiness value cannot become negative and gets decremented only if it is positive.
+
+Return the maximum sum of the happiness values of the selected children you can achieve by selecting k children.
+
+ 
+
+Example 1:
+
+Input: happiness = [1,2,3], k = 2
+Output: 4
+Explanation: We can pick 2 children in the following way:
+- Pick the child with the happiness value == 3. The happiness value of the remaining children becomes [0,1].
+- Pick the child with the happiness value == 1. The happiness value of the remaining child becomes [0]. Note that the happiness value cannot become less than 0.
+The sum of the happiness values of the selected children is 3 + 1 = 4.
+Example 2:
+
+Input: happiness = [1,1,1,1], k = 2
+Output: 1
+Explanation: We can pick 2 children in the following way:
+- Pick any child with the happiness value == 1. The happiness value of the remaining children becomes [0,0,0].
+- Pick the child with the happiness value == 0. The happiness value of the remaining child becomes [0,0].
+The sum of the happiness values of the selected children is 1 + 0 = 1.
+Example 3:
+
+Input: happiness = [2,3,4,5], k = 1
+Output: 5
+Explanation: We can pick 1 child in the following way:
+- Pick the child with the happiness value == 5. The happiness value of the remaining children becomes [1,2,3].
+The sum of the happiness values of the selected children is 5.
+ 
+
+Constraints:
+
+1 <= n == happiness.length <= 2 * 105
+1 <= happiness[i] <= 108
+1 <= k <= n
+
+Approach : 1
+ Time complexity  : O(k) + O(N LogN)
+ Space compelxity : O(1)
+
+class Solution {
+public:
+    long long maximumHappinessSum(vector<int>& happiness, int k) {
+            // sort the given vector and keep travel from the last becoz we need maximum happy count
+            // every time just add the current index val into the sum variable and then reduce 
+            // remaining index values by 1
+            // keep this process by k turns
+
+            sort(happiness.begin(),happiness.end());
+             int len=happiness.size();
+             int j=len-1;
+             long long sum=0;
+              int reduce=0;
+             //for k turns we need to do stuffs
+            for(int i=1;i<=k;i++)
+            {
+                for( ;j>=0;)
+                {
+                     if(happiness[j]-reduce>=0){
+                     sum+=happiness[j]-reduce;
+                     reduce++;  // reduce is for unlike we go for every index and then reduce
+                     j--;
+                     break;  // we only use reduce varible to reduce the next element 
+                     }
+                     else 
+                     {
+                        j--;
+                        break;
+                     }
+                }
+            }
+            return sum;
+    }
+};
+
+Approach : 2 (linear)
+
+ Time complexity  : O(k) + O(N LogN)
+ Space compelxity : O(1)
+
+class Solution {
+public:
+    long long maximumHappinessSum(vector<int>& happiness, int k) 
+    {
+long long  ret = 0;
+        sort(happiness.begin(), happiness.end());
+        const int n = happiness.size();
+        auto cnt = 0;
+        for(auto i = n-1 ; i >= 0 && k ; i--, k--) {
+            ret += std::max(0, happiness[i]-cnt++);
+        }
+        return ret;
+    }
+
+};
