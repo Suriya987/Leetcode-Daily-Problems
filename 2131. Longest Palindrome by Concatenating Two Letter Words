@@ -1,0 +1,128 @@
+You are given an array of strings words. Each element of words consists of two lowercase English letters.
+
+Create the longest possible palindrome by selecting some elements from words and concatenating them in any order. Each element can be selected at most once.
+
+Return the length of the longest palindrome that you can create. If it is impossible to create any palindrome, return 0.
+
+A palindrome is a string that reads the same forward and backward.
+
+
+Example 1:
+
+Input: words = ["lc","cl","gg"]
+Output: 6
+Explanation: One longest palindrome is "lc" + "gg" + "cl" = "lcggcl", of length 6.
+Note that "clgglc" is another longest palindrome that can be created.
+Example 2:
+
+Input: words = ["ab","ty","yt","lc","cl","ab"]
+Output: 8
+Explanation: One longest palindrome is "ty" + "lc" + "cl" + "yt" = "tylcclyt", of length 8.
+Note that "lcyttycl" is another longest palindrome that can be created.
+Example 3:
+
+Input: words = ["cc","ll","xx"]
+Output: 2
+Explanation: One longest palindrome is "cc", of length 2.
+Note that "ll" is another longest palindrome that can be created, and so is "xx".
+
+
+Soln:
+
+class Solution {
+public:
+    bool isPalindrome(string word)
+    {
+        int front=0,back=word.size()-1;
+        while(front<back)
+        {
+            if(word[front]!=word[back])
+            return false;
+
+            front++;
+            back--;
+        }
+        return true;
+    }
+    void findLongestPalindrome(unordered_map<int,int>&isTaken,vector<string>&words,int &maxLength,string &currWord)
+    {
+        int n=words.size();
+         string wrd=currWord;
+         for(int i=0;i<n;i++)
+         {
+           // cout<<i;
+            if(isTaken.find(i)==isTaken.end() || isTaken[i]==0)
+            {
+               // cout<<i;
+             wrd+=words[i];
+             isTaken[i]=1;
+             bool Palindrome=isPalindrome(wrd);
+             //cout<<wrd<<Palindrome<<"  ";
+             if(Palindrome)
+             {
+                int len=wrd.size();
+               // cout<<len;
+                maxLength=max(len,maxLength);
+             }
+             findLongestPalindrome(isTaken,words,maxLength,wrd);
+             wrd=currWord;
+             isTaken[i]=0;
+            }
+         }
+    }
+    int longestPalindrome(vector<string>& words) {
+        unordered_map<string,int>freq;
+        // int maxLength=0;
+        // string currWord="";
+        // findLongestPalindrome(isTaken,words,maxLength,currWord);
+        // return maxLength;
+
+        //  unordered_map<string, int> freq;
+
+        // // Count frequency of each word
+        // for (string& word : words) {
+        //     freq[word]++;
+        // }
+
+        int totalLength = 0;
+        bool hasMiddle = false;
+
+          // Count frequency of each word
+        for (string& word : words) {
+            freq[word]++;
+        }
+
+        for (auto& [word, count] : freq) {
+            string rev = string(word.rbegin(), word.rend());
+
+            // Case 1: Mirror pairs like ("ab", "ba")
+            if (word != rev) {
+                // Make sure the reverse word exists and has frequency
+                if (freq.find(rev) != freq.end() && freq[rev] > 0) {
+                    int pairCount = min(freq[word], freq[rev]);
+                    totalLength += pairCount * 4; // each pair contributes 4 characters
+                    freq[word] -= pairCount;
+                    freq[rev] -= pairCount;
+                }
+            } 
+            // Case 2: Palindromic words like ("gg", "cc", "aa")
+            else {
+                int pairCount = freq[word] / 2;
+                totalLength += pairCount * 4;
+                freq[word] -= pairCount * 2;
+
+                // If one palindromic word is left unused, we can put it in the middle
+                if (freq[word] > 0) {
+                    hasMiddle = true;
+                }
+            }
+        }
+
+        // One palindromic word (like "gg") can be placed in the center
+        if (hasMiddle) {
+            totalLength += 2;
+        }
+
+        return totalLength;
+    }
+};
